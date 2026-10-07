@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             xmlns:entities="clr-namespace:TaskManager.Core.Entities;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.KanbanView"
+             x:DataType="viewmodels:KanbanViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:PriorityToColorConverter x:Key="PriorityToColorConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="16">
+        <!-- Top Toolbar -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+            <Label Grid.Column="0" Text="Kanban Board" Style="{StaticResource PageTitle}" VerticalOptions="Center" />
+            <Button Grid.Column="2" Text="🔄 Refresh" Clicked="OnRefreshClicked" />
+        </Grid>
+
+        <!-- Columns Horizontal Scroll -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal">
+            <HorizontalStackLayout Spacing="16" BindableLayout.ItemsSource="{Binding Columns}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="viewmodels:KanbanColumnViewModel">
+                        <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource BackgroundColor}" WidthRequest="320" StrokeShape="RoundRectangle 8" Padding="12">
+                            <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+                                <!-- Column Header -->
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                                    <Label Grid.Column="0" Text="{Binding Title}" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+                                    <Border Grid.Column="1" BackgroundColor="{DynamicResource CardBackgroundColor}" StrokeShape="RoundRectangle 12" Padding="8,2">
+                                        <Label Text="{Binding TaskCount}" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource TextSecondaryColor}" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Column Tasks CollectionView -->
+                                <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="entities:TaskItem">
+                                            <Border Margin="0,4" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 6" Padding="12">
+                                                <VerticalStackLayout Spacing="8">
+                                                    <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" LineBreakMode="WordWrap" />
+                                                    <Label Text="{Binding Description}" TextColor="{DynamicResource TextSecondaryColor}" FontSize="12" MaxLines="2" LineBreakMode="TailTruncation" />
+                                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                                        <Border Grid.Column="0" BackgroundColor="{Binding Priority, Converter={StaticResource PriorityToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="6,2">
+                                                            <Label Text="{Binding Priority}" FontSize="10" TextColor="White" FontAttributes="Bold" />
+                                                        </Border>
+                                                        <Label Grid.Column="2" Text="{Binding DueDate, StringFormat='{0:MMM d}'}" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                                                    </Grid>
+                                                </VerticalStackLayout>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                                <!-- Quick Add Button -->
+                                <Button Grid.Row="2" Text="+ Quick Add Task" Style="{StaticResource SidebarButton}" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:KanbanViewModel}}, Path=QuickAddCommand}" CommandParameter="{Binding Status}" HorizontalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentView>

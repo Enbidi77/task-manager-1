@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:dtos="clr-namespace:TaskManager.Core.DTOs;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.SearchOverlay"
+             x:DataType="viewmodels:SearchViewModel">
+
+    <Grid BackgroundColor="#80000000" Padding="40" HorizontalOptions="Fill" VerticalOptions="Fill">
+        <Border BackgroundColor="{DynamicResource SurfaceColor}" Style="{DynamicResource CardBorder}" StrokeShape="RoundRectangle 12" WidthRequest="600" VerticalOptions="Start" Margin="0,40,0,0" Padding="16">
+            <VerticalStackLayout Spacing="12">
+                <!-- Search Input Header -->
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                    <Label Grid.Column="0" Text="🔍" FontSize="18" VerticalOptions="Center" />
+                    <Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Type to search tasks, projects, tags... (Ctrl+K)" TextChanged="OnSearchTextChanged" FontSize="15" />
+                    <Button Grid.Column="2" Text="✕" Command="{Binding ClearCommand}" Clicked="OnCloseClicked" BackgroundColor="Transparent" TextColor="{DynamicResource TextTertiaryColor}" WidthRequest="32" HeightRequest="32" Padding="0" />
+                </Grid>
+
+                <BoxView Color="{DynamicResource DividerColor}" HeightRequest="1" />
+
+                <!-- Results List -->
+                <CollectionView ItemsSource="{Binding Results}" HeightRequest="320">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dtos:SearchResultDto">
+                            <Border Margin="0,3" Style="{DynamicResource CardBorder}" BackgroundColor="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle 6" Padding="10">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                    <Border Grid.Column="0" BackgroundColor="{DynamicResource AccentLightColor}" StrokeShape="RoundRectangle 4" Padding="6,2">
+                                        <Label Text="{Binding Type}" FontSize="10" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" />
+                                        <Label Text="{Binding MatchSnippet}" TextColor="{DynamicResource TextSecondaryColor}" FontSize="11" LineBreakMode="TailTruncation" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="2" Text="↵" FontSize="14" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+
+</ContentView>

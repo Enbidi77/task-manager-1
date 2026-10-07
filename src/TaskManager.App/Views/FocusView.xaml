@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             x:Class="TaskManager.App.Views.FocusView"
+             x:DataType="viewmodels:FocusViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="540">
+        <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 16" Padding="40" HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="28" HorizontalOptions="Center">
+                <!-- Header -->
+                <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                    <Label Text="🎯 FOCUS MODE" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" HorizontalTextAlignment="Center" CharacterSpacing="2" />
+                    <Label Text="{Binding CurrentTask.Title, FallbackValue='Deep Work Session'}" FontSize="20" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" />
+                    <Label Text="Session #1 of 4 · Pomodoro Interval" FontSize="13" TextColor="{DynamicResource TextSecondaryColor}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <!-- Huge Digital Timer Display -->
+                <Border BackgroundColor="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle 12" Padding="28,20" HorizontalOptions="Center">
+                    <Label Text="{Binding RemainingTime, StringFormat='{0:mm\\:ss}'}" FontSize="72" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" HorizontalTextAlignment="Center" FontFamily="OpenSansSemibold" />
+                </Border>
+
+                <!-- Sleek Progress Bar -->
+                <VerticalStackLayout Spacing="8">
+                    <ProgressBar Progress="{Binding Progress}" ProgressColor="{DynamicResource AccentColor}" HeightRequest="10" />
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Grid.Column="0" Text="{Binding ElapsedTime, StringFormat='Elapsed: {0:mm\\:ss}'}" FontSize="12" TextColor="{DynamicResource TextTertiaryColor}" />
+                        <Label Grid.Column="1" Text="{Binding Progress, StringFormat='{0:P0} complete'}" FontSize="12" TextColor="{DynamicResource TextTertiaryColor}" HorizontalTextAlignment="End" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Controls Toolbar -->
+                <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
+                    <Button Text="▶ Start" Command="{Binding StartCommand}" IsVisible="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" BackgroundColor="{DynamicResource AccentColor}" TextColor="White" FontAttributes="Bold" Padding="24,12" CornerRadius="8" />
+                    
+                    <Button Text="⏸ Pause" Command="{Binding PauseCommand}" IsVisible="{Binding IsRunning}" BackgroundColor="{DynamicResource SurfaceColor}" TextColor="{DynamicResource TextPrimaryColor}" Padding="20,12" CornerRadius="8" />
+                    
+                    <Button Text="▶ Resume" Command="{Binding ResumeCommand}" IsVisible="{Binding IsPaused}" BackgroundColor="{DynamicResource AccentColor}" TextColor="White" Padding="20,12" CornerRadius="8" />
+
+                    <Button Text="✓ Finish" Command="{Binding FinishCommand}" IsVisible="{Binding IsRunning}" BackgroundColor="{DynamicResource SuccessColor}" TextColor="White" Padding="20,12" CornerRadius="8" />
+
+                    <Button Text="⏭ Skip" Command="{Binding SkipCommand}" IsVisible="{Binding IsRunning}" BackgroundColor="Transparent" TextColor="{DynamicResource TextSecondaryColor}" Padding="16,12" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+
+</ContentView>

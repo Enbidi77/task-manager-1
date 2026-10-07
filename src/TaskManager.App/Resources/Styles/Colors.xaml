@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Light Theme Colors -->
+    <Color x:Key="LightBackground">#F3F3F3</Color>
+    <Color x:Key="LightSurface">#FFFFFF</Color>
+    <Color x:Key="LightSidebarBackground">#F9F9F9</Color>
+    <Color x:Key="LightCardBackground">#FFFFFF</Color>
+    <Color x:Key="LightCardBorder">#E5E5E5</Color>
+    <Color x:Key="LightTextPrimary">#1A1A1A</Color>
+    <Color x:Key="LightTextSecondary">#666666</Color>
+    <Color x:Key="LightTextTertiary">#999999</Color>
+    <Color x:Key="LightAccent">#0078D4</Color>
+    <Color x:Key="LightAccentLight">#E8F4FD</Color>
+    <Color x:Key="LightSuccess">#107C10</Color>
+    <Color x:Key="LightWarning">#FFB900</Color>
+    <Color x:Key="LightError">#D13438</Color>
+    <Color x:Key="LightUrgent">#C50F1F</Color>
+    <Color x:Key="LightBorder">#E0E0E0</Color>
+    <Color x:Key="LightDivider">#F0F0F0</Color>
+    <Color x:Key="LightHover">#F5F5F5</Color>
+
+    <!-- Dark Theme Colors -->
+    <Color x:Key="DarkBackground">#1E1E1E</Color>
+    <Color x:Key="DarkSurface">#252526</Color>
+    <Color x:Key="DarkSidebarBackground">#1C1C1C</Color>
+    <Color x:Key="DarkCardBackground">#2D2D30</Color>
+    <Color x:Key="DarkElevatedCard">#333337</Color>
+    <Color x:Key="DarkCardBorder">#3E3E42</Color>
+    <Color x:Key="DarkTextPrimary">#E0E0E0</Color>
+    <Color x:Key="DarkTextSecondary">#A0A0A0</Color>
+    <Color x:Key="DarkTextTertiary">#6D6D6D</Color>
+    <Color x:Key="DarkAccent">#4CC2FF</Color>
+    <Color x:Key="DarkAccentLight">#1A3A4D</Color>
+    <Color x:Key="DarkSuccess">#3FB950</Color>
+    <Color x:Key="DarkWarning">#D29922</Color>
+    <Color x:Key="DarkError">#F85149</Color>
+    <Color x:Key="DarkUrgent">#F85149</Color>
+    <Color x:Key="DarkBorder">#3E3E42</Color>
+    <Color x:Key="DarkDivider">#2D2D30</Color>
+    <Color x:Key="DarkHover">#2A2D2E</Color>
+
+    <!-- Semantic Theme Colors (initialized to Light theme; dynamically updated by App.ApplyTheme) -->
+    <Color x:Key="BackgroundColor">#F3F3F3</Color>
+    <Color x:Key="SurfaceColor">#FFFFFF</Color>
+    <Color x:Key="SidebarBackgroundColor">#F9F9F9</Color>
+    <Color x:Key="CardBackgroundColor">#FFFFFF</Color>
+    <Color x:Key="CardBorderColor">#E5E5E5</Color>
+    <Color x:Key="TextPrimaryColor">#1A1A1A</Color>
+    <Color x:Key="TextSecondaryColor">#666666</Color>
+    <Color x:Key="TextTertiaryColor">#999999</Color>
+    <Color x:Key="AccentColor">#0078D4</Color>
+    <Color x:Key="AccentLightColor">#E8F4FD</Color>
+    <Color x:Key="SuccessColor">#107C10</Color>
+    <Color x:Key="WarningColor">#FFB900</Color>
+    <Color x:Key="ErrorColor">#D13438</Color>
+    <Color x:Key="UrgentColor">#C50F1F</Color>
+    <Color x:Key="BorderColor">#E0E0E0</Color>
+    <Color x:Key="DividerColor">#F0F0F0</Color>
+    <Color x:Key="HoverColor">#F5F5F5</Color>
+
+</ResourceDictionary>

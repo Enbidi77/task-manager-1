@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:views="clr-namespace:TaskManager.App.Views"
+             x:Class="TaskManager.App.MainPage"
+             x:DataType="viewmodels:MainViewModel">
+
+    <Grid RowDefinitions="48,*" ColumnDefinitions="Auto,*">
+        
+        <!-- Top Bar -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BackgroundColor="{DynamicResource SurfaceColor}" Stroke="{DynamicResource DividerColor}" StrokeThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,0">
+                <HorizontalStackLayout Grid.Column="0" Spacing="12" VerticalOptions="Center">
+                    <Button Text="☰" WidthRequest="32" HeightRequest="32" Padding="0" Margin="0" BackgroundColor="Transparent" TextColor="{DynamicResource TextPrimaryColor}" Clicked="OnToggleSidebarClicked" />
+                    <Label Text="FlowTask" FontAttributes="Bold" FontSize="18" VerticalOptions="Center" TextColor="{DynamicResource AccentColor}" />
+                </HorizontalStackLayout>
+                
+                <!-- Search Box (Clickable) -->
+                <Border Grid.Column="1" BackgroundColor="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle 4" Padding="12,6" HorizontalOptions="Center" WidthRequest="400" VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSearchBoxTapped" />
+                    </Border.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="🔍" VerticalOptions="Center" />
+                        <Label Text="Search (Ctrl+K)" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+                
+                <HorizontalStackLayout Grid.Column="2" Spacing="12" VerticalOptions="Center">
+                    <Button Text="🔔" FontSize="16" BackgroundColor="Transparent" TextColor="{DynamicResource TextPrimaryColor}" WidthRequest="36" HeightRequest="36" Padding="0" Clicked="OnNotificationsClicked" />
+                    <Button Text="⚙" FontSize="16" BackgroundColor="Transparent" TextColor="{DynamicResource TextPrimaryColor}" WidthRequest="36" HeightRequest="36" Padding="0" Clicked="OnSettingsClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Sidebar -->
+        <Border x:Name="SidebarContainer" Grid.Row="1" Grid.Column="0" BackgroundColor="{DynamicResource SidebarBackgroundColor}" WidthRequest="240" Stroke="{DynamicResource DividerColor}" StrokeThickness="0,0,1,0">
+            <ScrollView>
+                <VerticalStackLayout Padding="8" Spacing="2">
+                    <Button Text="📊 Dashboard" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Dashboard" />
+                    <Button Text="✅ My Tasks" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Tasks" />
+                    <Button Text="📥 Inbox" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Inbox" />
+                    <Button Text="📅 Today" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Today" />
+                    <Button Text="📆 Upcoming" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Upcoming" />
+                    <Button Text="📋 Calendar" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Calendar" />
+                    <Button Text="📌 Kanban" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Kanban" />
+                    <Button Text="📈 Timeline" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Timeline" />
+                    
+                    <Label Text="PROJECTS" Style="{StaticResource SectionHeader}" />
+                    <Button Text="📁 All Projects" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Projects" />
+                    
+                    <Label Text="RESOURCES" Style="{StaticResource SectionHeader}" />
+                    <Button Text="📊 Workload &amp; Heatmap" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Resources" />
+                    <Button Text="📈 Analytics" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Analytics" />
+                    <Button Text="📋 Activity" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Activity" />
+
+                    <Label Text="PRODUCTIVITY" Style="{StaticResource SectionHeader}" />
+                    <Button Text="🎯 Focus Mode" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Focus" />
+                    <Button Text="⏱ Time Tracking" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="TimeTracking" />
+                    
+                    <BoxView Color="{DynamicResource DividerColor}" HeightRequest="1" Margin="8,8" />
+                    <Button Text="⚙ Settings" Style="{StaticResource SidebarButton}" Command="{Binding NavigateCommand}" CommandParameter="Settings" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ContentView x:Name="MainContentView" Grid.Row="1" Grid.Column="1" Margin="16" />
+
+        <!-- Search Overlay Modal -->
+        <views:SearchOverlay x:Name="SearchOverlayControl" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="False" />
+    </Grid>
+
+</ContentPage>

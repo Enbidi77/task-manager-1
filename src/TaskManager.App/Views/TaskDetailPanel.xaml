@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             x:Class="TaskManager.App.Views.TaskDetailPanel"
+             x:DataType="viewmodels:TaskDetailViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:PriorityToColorConverter x:Key="PriorityToColorConverter" />
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20" WidthRequest="380">
+        <ScrollView>
+            <VerticalStackLayout Spacing="16">
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Task Details" FontAttributes="Bold" FontSize="18" TextColor="{DynamicResource TextPrimaryColor}" VerticalOptions="Center" />
+                    <Button Grid.Column="1" Text="🗑 Delete" Command="{Binding DeleteCommand}" BackgroundColor="Transparent" TextColor="{DynamicResource ErrorColor}" Padding="8,4" />
+                </Grid>
+
+                <!-- Title Editor -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Title" Style="{StaticResource Subtitle}" />
+                    <Entry Text="{Binding Task.Title}" FontSize="15" FontAttributes="Bold" />
+                </VerticalStackLayout>
+
+                <!-- Status & Priority -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Status" Style="{StaticResource Subtitle}" />
+                        <Border BackgroundColor="{Binding Task.Status, Converter={StaticResource StatusToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="10,6">
+                            <Label Text="{Binding Task.Status}" FontAttributes="Bold" TextColor="White" FontSize="12" HorizontalOptions="Center" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="Priority" Style="{StaticResource Subtitle}" />
+                        <Border BackgroundColor="{Binding Task.Priority, Converter={StaticResource PriorityToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="10,6">
+                            <Label Text="{Binding Task.Priority}" FontAttributes="Bold" TextColor="White" FontSize="12" HorizontalOptions="Center" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Due Date & Timers -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Due Date" Style="{StaticResource Subtitle}" />
+                    <Label Text="{Binding Task.DueDate, StringFormat='📅 {0:MMMM dd, yyyy}'}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" />
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Spacing="12">
+                    <Button Text="⏱ Start Timer" Command="{Binding StartTimerCommand}" BackgroundColor="{DynamicResource AccentColor}" TextColor="White" FontSize="12" />
+                    <Button Text="⏹ Stop Timer" Command="{Binding StopTimerCommand}" BackgroundColor="{DynamicResource SurfaceColor}" TextColor="{DynamicResource TextPrimaryColor}" FontSize="12" />
+                </HorizontalStackLayout>
+
+                <!-- Description -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Description &amp; Notes" Style="{StaticResource Subtitle}" />
+                    <Editor Text="{Binding Task.Description}" HeightRequest="120" AutoSize="Disabled" />
+                </VerticalStackLayout>
+
+                <!-- Action Button -->
+                <Button Text="💾 Save Changes" Command="{Binding SaveCommand}" BackgroundColor="{DynamicResource SuccessColor}" TextColor="White" FontAttributes="Bold" Margin="0,12,0,0" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
+
+</ContentView>

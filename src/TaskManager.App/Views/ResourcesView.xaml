@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:dtos="clr-namespace:TaskManager.Core.DTOs;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.ResourcesView"
+             x:DataType="viewmodels:ResourcesViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="16">
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="Resource &amp; Workload Center" Style="{StaticResource PageTitle}" />
+                    <Label Text="Live CPU-style productivity and operational workload monitor" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="🔄 Refresh" Command="{Binding RefreshCommand}" />
+            </Grid>
+
+            <!-- CPU Workload Monitor Hero Card -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Current Workload Intensity" FontAttributes="Bold" FontSize="18" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Label Grid.Column="1" Text="{Binding CurrentWorkload, StringFormat='{0:F0}%'}" FontAttributes="Bold" FontSize="24" TextColor="{DynamicResource AccentColor}" />
+                    </Grid>
+
+                    <ProgressBar Progress="{Binding CurrentWorkload, StringFormat='{0}'}" ProgressColor="{DynamicResource AccentColor}" HeightRequest="12" />
+
+                    <!-- Stat Counters -->
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12" Margin="0,12,0,0">
+                        <Border Grid.Column="0" Style="{StaticResource StatCard}">
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="Active Tasks" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" />
+                                <Label Text="{Binding ActiveTasks}" FontSize="24" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource StatCard}">
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="Blocked" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" />
+                                <Label Text="{Binding BlockedTasks}" FontSize="24" FontAttributes="Bold" TextColor="{DynamicResource ErrorColor}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource StatCard}">
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="Overdue" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" />
+                                <Label Text="{Binding OverdueTasks}" FontSize="24" FontAttributes="Bold" TextColor="{DynamicResource UrgentColor}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="3" Style="{StaticResource StatCard}">
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="Due Today" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" />
+                                <Label Text="{Binding DueTodayTasks}" FontSize="24" FontAttributes="Bold" TextColor="{DynamicResource WarningColor}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Project Workload Breakdown -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Workload by Project" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding WorkloadByProject}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dtos:WorkloadDataDto">
+                                <Grid ColumnDefinitions="180,*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                                    <Label Grid.Column="0" Text="{Binding AssigneeName}" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+                                    <ProgressBar Grid.Column="1" Progress="0.65" ProgressColor="{DynamicResource AccentColor}" HeightRequest="8" VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="{Binding ActiveTasks, StringFormat='{0} tasks'}" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Productivity Contribution Heatmap -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Activity Heatmap (Past 35 Days)" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                            <Label Text="Less" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                            <BoxView Color="#2D2D30" WidthRequest="12" HeightRequest="12" CornerRadius="2" />
+                            <BoxView Color="#0E4429" WidthRequest="12" HeightRequest="12" CornerRadius="2" />
+                            <BoxView Color="#006D32" WidthRequest="12" HeightRequest="12" CornerRadius="2" />
+                            <BoxView Color="#26A641" WidthRequest="12" HeightRequest="12" CornerRadius="2" />
+                            <BoxView Color="#39D353" WidthRequest="12" HeightRequest="12" CornerRadius="2" />
+                            <Label Text="More" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <!-- Heatmap Grid -->
+                    <FlexLayout BindableLayout.ItemsSource="{Binding HeatmapCells}" Wrap="Wrap" JustifyContent="Start">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="viewmodels:HeatmapCellDto">
+                                <Border Margin="3" WidthRequest="22" HeightRequest="22" BackgroundColor="{Binding ColorHex}" StrokeShape="RoundRectangle 4" ToolTipProperties.Text="{Binding Count, StringFormat='{0} activities'}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

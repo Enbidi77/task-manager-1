@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:entities="clr-namespace:TaskManager.Core.Entities;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.ProjectListView"
+             x:DataType="viewmodels:ProjectListViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="16">
+            <!-- Header Toolbar -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="📁 Projects" Style="{StaticResource PageTitle}" />
+                    <Label Text="Organize initiatives, track progress, and manage scope" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+                <HorizontalStackLayout Grid.Column="1" Spacing="12">
+                    <Button Text="+ New Project" Command="{Binding CreateProjectCommand}" BackgroundColor="{DynamicResource AccentColor}" TextColor="White" FontAttributes="Bold" />
+                    <Button Text="🔄 Refresh" Clicked="OnRefreshClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <!-- Projects Grid -->
+            <CollectionView ItemsSource="{Binding Projects}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="16" VerticalItemSpacing="16" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="entities:Project">
+                        <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="16">
+                            <VerticalStackLayout Spacing="12">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <BoxView Grid.Column="0" Color="{Binding Color, FallbackValue='#0078D4'}" WidthRequest="12" HeightRequest="12" CornerRadius="3" VerticalOptions="Center" Margin="0,0,8,0" />
+                                    <Label Grid.Column="1" Text="{Binding Name}" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                                    <Button Grid.Column="2" Text="🗑" BackgroundColor="Transparent" Padding="0" WidthRequest="28" HeightRequest="28" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProjectListViewModel}}, Path=DeleteProjectCommand}" CommandParameter="{Binding .}" />
+                                </Grid>
+
+                                <Label Text="{Binding Description, FallbackValue='Active project initiative'}" FontSize="13" TextColor="{DynamicResource TextSecondaryColor}" MaxLines="3" LineBreakMode="TailTruncation" HeightRequest="45" />
+
+                                <ProgressBar Progress="0.75" ProgressColor="{Binding Color, FallbackValue='#0078D4'}" HeightRequest="6" />
+
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Text="In Progress" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" />
+                                    <Label Grid.Column="1" Text="75%" FontSize="11" FontAttributes="Bold" TextColor="{DynamicResource TextSecondaryColor}" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             x:Class="TaskManager.App.Views.SettingsView"
+             x:DataType="viewmodels:SettingsViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="16">
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="⚙ Preferences &amp; Settings" Style="{StaticResource PageTitle}" />
+                    <Label Text="Configure application behavior, theming, and database backups" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="💾 Save Settings" Command="{Binding SaveCommand}" BackgroundColor="{DynamicResource AccentColor}" TextColor="White" FontAttributes="Bold" />
+            </Grid>
+
+            <!-- Status Banner -->
+            <Border BackgroundColor="{DynamicResource AccentLightColor}" StrokeShape="RoundRectangle 6" Padding="12" IsVisible="{Binding StatusMessage, Converter={StaticResource StringNotEmptyConverter}}">
+                <Label Text="{Binding StatusMessage}" TextColor="{DynamicResource AccentColor}" FontAttributes="Bold" />
+            </Border>
+
+            <!-- Appearance Section -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Appearance" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <Grid ColumnDefinitions="200,*" ColumnSpacing="16" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Theme Mode" VerticalOptions="Center" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="16">
+                            <Button Text="System" Command="{Binding SaveCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                            <Button Text="☀️ Light" Command="{Binding SaveCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                            <Button Text="🌙 Dark" Command="{Binding SaveCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="200,*" ColumnSpacing="16" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Accent Color" VerticalOptions="Center" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                            <BoxView Color="#0078D4" WidthRequest="24" HeightRequest="24" CornerRadius="12" />
+                            <BoxView Color="#8E56FF" WidthRequest="24" HeightRequest="24" CornerRadius="12" />
+                            <BoxView Color="#107C10" WidthRequest="24" HeightRequest="24" CornerRadius="12" />
+                            <BoxView Color="#FF8C00" WidthRequest="24" HeightRequest="24" CornerRadius="12" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Productivity & Pomodoro Section -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Productivity &amp; Timer Intervals" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <Grid ColumnDefinitions="200,120,*" ColumnSpacing="16" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Pomodoro Duration (min)" VerticalOptions="Center" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Entry Grid.Column="1" Text="{Binding PomodoroDuration}" Keyboard="Numeric" HorizontalTextAlignment="Center" />
+                        <Label Grid.Column="2" Text="Default: 25 minutes" FontSize="12" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                    </Grid>
+
+                    <Grid ColumnDefinitions="200,120,*" ColumnSpacing="16" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Short Break (min)" VerticalOptions="Center" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Entry Grid.Column="1" Text="{Binding BreakDuration}" Keyboard="Numeric" HorizontalTextAlignment="Center" />
+                        <Label Grid.Column="2" Text="Default: 5 minutes" FontSize="12" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Data & Maintenance Section -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Data &amp; Backups" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <HorizontalStackLayout Spacing="16">
+                        <Button Text="📦 Export Tasks (JSON)" Command="{Binding ExportCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Button Text="💾 Create Database Backup" Command="{Binding BackupCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

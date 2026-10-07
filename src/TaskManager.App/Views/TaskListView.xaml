@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             xmlns:entities="clr-namespace:TaskManager.Core.Entities;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.TaskListView"
+             x:DataType="viewmodels:TaskListViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:PriorityToColorConverter x:Key="PriorityToColorConverter" />
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" Padding="16">
+        <!-- Main Task List Column -->
+        <Grid Grid.Column="0" RowDefinitions="Auto,*" RowSpacing="16">
+            <!-- Toolbar -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="16">
+                <Label Grid.Column="0" Text="Tasks" Style="{StaticResource PageTitle}" VerticalOptions="Center" />
+
+                <!-- Search Filter Input -->
+                <Border Grid.Column="1" BackgroundColor="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle 4" Padding="10,4" HorizontalOptions="Fill">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Label Grid.Column="0" Text="🔍" VerticalOptions="Center" Margin="0,0,8,0" />
+                        <Entry Grid.Column="1" Text="{Binding SearchText}" Placeholder="Filter tasks..." TextChanged="OnSearchTextChanged" />
+                    </Grid>
+                </Border>
+
+                <HorizontalStackLayout Grid.Column="2" Spacing="8">
+                    <Button Text="+ New Task" Command="{Binding CreateTaskCommand}" BackgroundColor="{DynamicResource AccentColor}" TextColor="White" FontAttributes="Bold" />
+                    <Button Text="🔄" Clicked="OnRefreshClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <!-- Task List -->
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}" SelectionMode="Single" SelectedItem="{Binding SelectedTask}" SelectionChanged="OnTaskSelectionChanged">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="entities:TaskItem">
+                        <Border Margin="0,4" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 6" Padding="12">
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                                <!-- Checkbox / Complete Action -->
+                                <Button Grid.Column="0" Text="✓" WidthRequest="28" HeightRequest="28" Padding="0" CornerRadius="14" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource SuccessColor}" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TaskListViewModel}}, Path=CompleteTaskCommand}" CommandParameter="{Binding .}" />
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" />
+                                    <Label Text="{Binding Description}" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" LineBreakMode="TailTruncation" MaxLines="1" />
+                                </VerticalStackLayout>
+
+                                <Border Grid.Column="2" BackgroundColor="{Binding Priority, Converter={StaticResource PriorityToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="6,2">
+                                    <Label Text="{Binding Priority}" FontSize="11" TextColor="White" FontAttributes="Bold" />
+                                </Border>
+
+                                <Border Grid.Column="3" BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="6,2">
+                                    <Label Text="{Binding Status}" FontSize="11" TextColor="White" FontAttributes="Bold" />
+                                </Border>
+
+                                <Label Grid.Column="4" Text="{Binding DueDate, StringFormat='{0:MMM dd}'}" VerticalOptions="Center" FontSize="12" TextColor="{DynamicResource TextTertiaryColor}" />
+
+                                <Button Grid.Column="5" Text="🗑" BackgroundColor="Transparent" Padding="0" WidthRequest="28" HeightRequest="28" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:TaskListViewModel}}, Path=DeleteTaskCommand}" CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="16" Margin="0,40">
+                        <Label Text="No tasks found matching your filter." Style="{StaticResource Subtitle}" HorizontalOptions="Center" />
+                        <Button Text="+ Create a Task" Command="{Binding CreateTaskCommand}" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+
+        <!-- Right Side Task Details Inspector -->
+        <Border Grid.Column="1" WidthRequest="340" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="16" IsVisible="{Binding SelectedTask, Converter={StaticResource NullToBoolConverter}}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="16">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Task Inspector" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" VerticalOptions="Center" />
+                        <Button Grid.Column="1" Text="✕" Clicked="OnCloseDetailsClicked" BackgroundColor="Transparent" TextColor="{DynamicResource TextTertiaryColor}" Padding="0" WidthRequest="28" HeightRequest="28" />
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Title" Style="{StaticResource Subtitle}" />
+                        <Entry Text="{Binding SelectedTask.Title}" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Description" Style="{StaticResource Subtitle}" />
+                        <Editor Text="{Binding SelectedTask.Description}" HeightRequest="100" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Priority" Style="{StaticResource Subtitle}" />
+                            <Border BackgroundColor="{Binding SelectedTask.Priority, Converter={StaticResource PriorityToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="6,2">
+                                <Label Text="{Binding SelectedTask.Priority}" TextColor="White" FontSize="11" HorizontalOptions="Center" FontAttributes="Bold" />
+                            </Border>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Status" Style="{StaticResource Subtitle}" />
+                            <Border BackgroundColor="{Binding SelectedTask.Status, Converter={StaticResource StatusToColorConverter}}" StrokeShape="RoundRectangle 4" Padding="6,2">
+                                <Label Text="{Binding SelectedTask.Status}" TextColor="White" FontSize="11" HorizontalOptions="Center" FontAttributes="Bold" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Button Text="✓ Mark Complete" Command="{Binding CompleteTaskCommand}" CommandParameter="{Binding SelectedTask}" BackgroundColor="{DynamicResource SuccessColor}" TextColor="White" FontAttributes="Bold" Margin="0,12,0,0" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+
+</ContentView>

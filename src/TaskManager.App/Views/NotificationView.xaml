@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             xmlns:entities="clr-namespace:TaskManager.Core.Entities;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.NotificationView"
+             x:DataType="viewmodels:NotificationViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:DateTimeToRelativeConverter x:Key="DateTimeToRelativeConverter" />
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="16">
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="🔔 Notifications &amp; Alerts" Style="{StaticResource PageTitle}" />
+                    <Label Text="Stay informed about deadlines, task mentions, and scheduled focus intervals" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+                <HorizontalStackLayout Grid.Column="1" Spacing="12">
+                    <Button Text="✓ Mark All Read" Command="{Binding MarkAllReadCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                    <Button Text="🔄 Refresh" Clicked="OnRefreshClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <!-- Notifications List -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <CollectionView ItemsSource="{Binding Notifications}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="entities:Notification">
+                            <Border Margin="0,4" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle 6" Padding="14">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                                    <Label Grid.Column="0" Text="📌" FontSize="18" VerticalOptions="Center" />
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" />
+                                        <Label Text="{Binding Message}" TextColor="{DynamicResource TextSecondaryColor}" FontSize="12" />
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="2" Text="{Binding CreatedAt, Converter={StaticResource DateTimeToRelativeConverter}}" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" />
+
+                                    <Button Grid.Column="3" Text="✓ Read" Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:NotificationViewModel}}, Path=MarkAsReadCommand}" CommandParameter="{Binding .}" IsVisible="{Binding IsRead, Converter={StaticResource InverseBoolConverter}}" BackgroundColor="Transparent" TextColor="{DynamicResource AccentColor}" Padding="8,4" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

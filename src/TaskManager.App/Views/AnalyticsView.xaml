@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:dtos="clr-namespace:TaskManager.Core.DTOs;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.AnalyticsView"
+             x:DataType="viewmodels:AnalyticsViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="16">
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="📊 Analytics &amp; Productivity" Style="{StaticResource PageTitle}" />
+                    <Label Text="Longitudinal performance metrics, output rates, and focus trends" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="🔄 Refresh" Clicked="OnRefreshClicked" />
+            </Grid>
+
+            <!-- KPI Summary Cards -->
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="16">
+                <Border Grid.Column="0" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Completion Rate" Style="{StaticResource Subtitle}" />
+                        <Label Text="{Binding CompletionRatePercentage, StringFormat='{0:F1}%'}" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource SuccessColor}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Tasks Completed" Style="{StaticResource Subtitle}" />
+                        <Label Text="{Binding TotalTasksCompleted}" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Total Deep Focus" Style="{StaticResource Subtitle}" />
+                        <Label Text="{Binding TotalFocusHours, StringFormat='{0} hrs'}" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="3" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Overdue Rate" Style="{StaticResource Subtitle}" />
+                        <Label Text="{Binding OverdueRate, StringFormat='{0:F1}%'}" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource WarningColor}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- 14-Day Productivity Trend Chart -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Daily Output (Past 14 Days)" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <CollectionView ItemsSource="{Binding ProductivityDays}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="dtos:ProductivityDataDto">
+                                <Grid ColumnDefinitions="120,*,60,60" ColumnSpacing="16" Padding="0,6" VerticalOptions="Center">
+                                    <Label Grid.Column="0" Text="{Binding Date, StringFormat='{0:ddd, MMM d}'}" TextColor="{DynamicResource TextSecondaryColor}" VerticalOptions="Center" />
+                                    <ProgressBar Grid.Column="1" Progress="0.7" ProgressColor="{DynamicResource AccentColor}" HeightRequest="8" VerticalOptions="Center" />
+                                    <Label Grid.Column="2" Text="{Binding TasksCompleted, StringFormat='{0} tasks'}" FontSize="12" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" VerticalOptions="Center" HorizontalTextAlignment="End" />
+                                    <Label Grid.Column="3" Text="{Binding FocusHours, StringFormat='{0}h focus'}" FontSize="12" TextColor="{DynamicResource TextTertiaryColor}" VerticalOptions="Center" HorizontalTextAlignment="End" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>

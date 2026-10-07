@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             xmlns:entities="clr-namespace:TaskManager.Core.Entities;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.TimelineView"
+             x:DataType="viewmodels:TimelineViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <Grid RowDefinitions="Auto,*" Padding="16" RowSpacing="16">
+        <!-- Toolbar -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="16">
+            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <Label Text="📈 Project Timeline &amp; Gantt" Style="{StaticResource PageTitle}" />
+                    <Label Text="Visualize schedule, dependencies, and milestone delivery" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Grid.Column="1" Spacing="12">
+                    <Button Text="🔍-" Command="{Binding ZoomOutCommand}" WidthRequest="36" HeightRequest="36" Padding="0" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                    <Button Text="🔍+" Command="{Binding ZoomInCommand}" WidthRequest="36" HeightRequest="36" Padding="0" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" />
+                    <Button Text="📍 Today" Command="{Binding ScrollToTodayCommand}" BackgroundColor="{DynamicResource BackgroundColor}" TextColor="{DynamicResource TextPrimaryColor}" Padding="12,6" />
+                    <Button Text="🔄 Refresh" Clicked="OnRefreshClicked" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Gantt Timeline Board -->
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+            <Grid RowDefinitions="Auto,*" RowSpacing="12">
+                <!-- Timeline Header Header -->
+                <Grid Grid.Row="0" ColumnDefinitions="260,*" BackgroundColor="{DynamicResource BackgroundColor}" Padding="12,8">
+                    <Label Grid.Column="0" Text="TASK / MILESTONE" FontAttributes="Bold" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" />
+                    <Label Grid.Column="1" Text="SCHEDULE TIMELINE (WEEK / MONTH VIEW)" FontAttributes="Bold" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" />
+                </Grid>
+
+                <!-- Gantt Rows -->
+                <CollectionView Grid.Row="1" ItemsSource="{Binding Tasks}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="entities:TaskItem">
+                            <Grid ColumnDefinitions="260,*" Padding="12,10" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding DueDate, StringFormat='Due: {0:MMM d}'}" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" />
+                                </VerticalStackLayout>
+
+                                <Grid Grid.Column="1" VerticalOptions="Center" HeightRequest="24">
+                                    <BoxView Color="{DynamicResource BackgroundColor}" HeightRequest="4" VerticalOptions="Center" />
+                                    <!-- Gantt Bar -->
+                                    <Border Margin="20,0,60,0" HeightRequest="20" BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}" StrokeShape="RoundRectangle 4" VerticalOptions="Center" Padding="8,2">
+                                        <Label Text="{Binding Status}" FontSize="10" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+    </Grid>
+
+</ContentView>

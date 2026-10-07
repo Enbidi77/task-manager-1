@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:TaskManager.Application.ViewModels;assembly=TaskManager.Application"
+             xmlns:converters="clr-namespace:TaskManager.App.Converters"
+             xmlns:entities="clr-namespace:TaskManager.Core.Entities;assembly=TaskManager.Core"
+             x:Class="TaskManager.App.Views.TimeTrackingView"
+             x:DataType="viewmodels:TimeTrackingViewModel">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="24" Padding="16">
+            <!-- Header -->
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="⏱ Time Tracking" Style="{StaticResource PageTitle}" />
+                    <Label Text="Track hours, analyze deep work, and log task sessions" Style="{StaticResource Subtitle}" />
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="🔄 Refresh" Clicked="OnRefreshClicked" />
+            </Grid>
+
+            <!-- Active Timer Banner -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <VerticalStackLayout Grid.Column="0" Spacing="6">
+                        <Label Text="ACTIVE TIMER" FontSize="11" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" CharacterSpacing="1" />
+                        <Label Text="{Binding ActiveTimer.Notes, FallbackValue='No active timer running'}" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+                        <Label Text="{Binding ActiveTimer.StartTime, StringFormat='Started at {0:HH:mm:ss}'}" FontSize="12" TextColor="{DynamicResource TextSecondaryColor}" IsVisible="{Binding ActiveTimer, Converter={StaticResource NullToBoolConverter}}" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Column="1" Text="⏹ Stop Timer" BackgroundColor="{DynamicResource UrgentColor}" TextColor="White" FontAttributes="Bold" Command="{Binding StopCommand}" CommandParameter="{Binding ActiveTimer.TaskId}" IsVisible="{Binding ActiveTimer, Converter={StaticResource NullToBoolConverter}}" />
+                </Grid>
+            </Border>
+
+            <!-- Summary Card -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <Grid ColumnDefinitions="*,*">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Total Tracked Today" Style="{StaticResource Subtitle}" />
+                        <Label Text="{Binding TotalToday, Converter={StaticResource TimeSpanToStringConverter}}" FontSize="28" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Today's Log Entries -->
+            <Border Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource SurfaceColor}" StrokeShape="RoundRectangle 8" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Logged Sessions" FontAttributes="Bold" FontSize="16" TextColor="{DynamicResource TextPrimaryColor}" />
+
+                    <CollectionView ItemsSource="{Binding TodayEntries}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="entities:TimeEntry">
+                                <Border Margin="0,4" Style="{StaticResource CardBorder}" BackgroundColor="{DynamicResource BackgroundColor}" StrokeShape="RoundRectangle 6" Padding="12">
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="{Binding Notes, FallbackValue='Task Implementation'}" FontAttributes="Bold" TextColor="{DynamicResource TextPrimaryColor}" />
+                                            <Label Text="{Binding StartTime, StringFormat='{0:MMM d, HH:mm}'}" FontSize="11" TextColor="{DynamicResource TextTertiaryColor}" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="{Binding Duration, Converter={StaticResource TimeSpanToStringConverter}}" FontAttributes="Bold" TextColor="{DynamicResource AccentColor}" VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentView>
